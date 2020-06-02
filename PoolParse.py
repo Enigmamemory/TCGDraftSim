@@ -1,4 +1,7 @@
 import os
+import json
+
+import CardData as CD
 
 CMain = {}
 CExtra = {}
@@ -18,7 +21,66 @@ def FileParse(fname, rarity):
             section = 1
         elif line[0].isdigit():
             switcher = CategorySwitch(rarity)
-            InsertCardIntoCategory(card,switcher)
+            data = CD.Get_Card_Info(card)
+            cardname = data["name"]
+            InsertCardIntoCategory(cardname,switcher,data)
+
+def InfoAdd(data):
+
+    info = [1]
+
+    type = data['type']
+    ptype = CD.Parse_Type(type)
+
+    islink = CD.Is_Link(ptype)
+    ismon = CD.Is_Mon(ptype)
+    ispend = CD.Is_Pend(ptype)
+
+    race = data['race']
+    desc = data['desc']
+
+    if ismon:
+
+        attribute = data['attribute']
+        atk = data['atk']
+
+        if islink:
+            linkval = data['linkval']
+            linkmarkers = ', '.join(data['linkmarkers'])
+
+            info.append(type)
+            info.append('Attribute: ' + attribute)
+            info.append('Type: ' + race)
+            info.append('Linkval: ' + str(linkval))
+            info.append('Linkmarkers: ' + linkmarkers)
+            info.append('Atk: ' + str(atk))
+            info.append('Effect: ' + desc)
+
+        else:
+
+            defense = data['def']
+            level = data['level']
+
+            info.append(type)
+            info.append('Level: ' + str(level))
+            info.append('Attribute: ' + attribute)
+            info.append('Type: ' + race)
+
+            if ispend:
+                scale = data['scale']
+                info.append('Scale: ' + str(scale))
+
+            info.append('Atk: ' + str(atk))
+            info.append('Def: ' + str(defense))
+            info.append('Effect: ' + desc)
+
+    else:
+
+        info.append(type)
+        info.append('Type: ' + race)
+        info.append('Effect: ' + desc)
+
+    return info
 
 def CategorySwitch(rarity):
     argument = (rarity, section)
@@ -33,18 +95,20 @@ def CategorySwitch(rarity):
 
     return switcher.get(argument)
 
-def InsertCardIntoCategory(card,switcher):
+def InsertCardIntoCategory(cardname,switcher,data):
 
     if switcher == 0:
-        if CMain.get(card) == None:
-            CMain[card] = [1]
+        if CMain.get(cardname) == None:
+            cardinfo = InfoAdd(data)
+            CMain[cardname] = cardinfo
         else:
-            CMain.get(card)[0] += 1
+            CMain.get(cardname)[0] += 1
     elif switcher == 3:
-        if CExtra.get(card) == None:
-            CExtra[card] = [1]
+        if CExtra.get(cardname) == None:
+            cardinfo = InfoAdd(data)
+            CExtra[cardname] = cardinfo
         else:
-            CExtra.get(card)[0] += 1
+            CExtra.get(cardname)[0] += 1
 
 
 
