@@ -6,6 +6,7 @@ import CardData as CD
 CMain = {}
 CExtra = {}
 section = 0
+savechoice = [1,1,1,1,1,1]
 
 def FileParse(fname, rarity):
     global section
@@ -110,6 +111,15 @@ def InsertCardIntoCategory(cardname,switcher,data):
         else:
             CExtra.get(cardname)[0] += 1
 
+def SaveCards(choice):
+
+    if choice[0] == 1:
+        with open('CMain.json', 'w') as jdump:
+            json.dump(CMain, jdump)
+
+    if choice[3] == 1:
+        with open('CExtra.json', 'w') as jdump:
+            json.dump(CExtra, jdump)
 
 
 COMMON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Common'))
@@ -117,7 +127,12 @@ COMMON_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'Common'))
 comfiles = os.listdir(COMMON_DIR)
 
 for file in comfiles:
+    print("Reading " + file)
     FileParse(os.path.join(COMMON_DIR,file),"C")
+    print("Finished Reading " + file)
 
-print(CMain)
-print(CExtra)
+
+SaveCards(savechoice)
+
+#print(CMain)
+#print(CExtra)
