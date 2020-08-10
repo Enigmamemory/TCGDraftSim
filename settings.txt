@@ -1,9 +1,9 @@
 random:0
-packs:8
+packs:6
 commons:12
 uncommons:6
 rares:2
-extrapacks:5
+extrapacks:4
 ecommons:6
 euncommons:3
 erares:1
