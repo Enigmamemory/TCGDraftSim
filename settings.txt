@@ -1,0 +1,9 @@
+random:0
+packs:8
+commons:12
+uncommons:6
+rares:2
+extrapacks:5
+ecommons:6
+euncommons:3
+erares:1
